@@ -1,0 +1,20 @@
+---
+
+- name: Install Kafka
+  include: install_kafka.yml
+  when: install_kafka
+
+- name: Config Kafka
+  include: config_kafka.yml
+  when: config_kafka
+
+- include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Start Kafka
+  shell: " cd {{install_dir}}/kafka_{{kafka_version}} && nohup bin/kafka-server-start.sh config/server.properties &"
+  become: yes
+  become_user: "{{ user }}"
+  when: start_service
+
+

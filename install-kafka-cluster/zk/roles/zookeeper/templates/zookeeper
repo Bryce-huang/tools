@@ -1,0 +1,20 @@
+#!/bin/bash
+# chkconfig:   2345 10 90
+# description:  zookeeper
+case $1 in
+          start) 
+              {{install_dir}}/zookeeper-{{zookeeper_version}}/bin/zkServer.sh start
+              ;;
+          stop)
+              {{install_dir}}/zookeeper-{{zookeeper_version}}/bin/zkServer.sh stop
+              ;;
+          status)
+              {{install_dir}}/zookeeper-{{zookeeper_version}}/bin/zkServer.sh status
+              ;;
+          restart)
+              {{install_dir}}/zookeeper-{{zookeeper_version}}/bin/zkServer.sh restart
+              ;;
+          *)
+              echo "require start|stop|status|restart"
+              ;;
+esac

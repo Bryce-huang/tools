@@ -1,0 +1,14 @@
+---
+- hosts: kafka
+  user: root
+  vars_files:
+    - "vars/kafka.yml"
+  vars:
+    install_kafka: true      # install kafka
+    config_kafka: true       # config kafka
+    start_service: true   # auto start kafka service
+    add_user: true        # add kafka user 
+    open_firewall: false   # open firewall
+  roles:
+    - user                # add user
+    - kafka           # kafka

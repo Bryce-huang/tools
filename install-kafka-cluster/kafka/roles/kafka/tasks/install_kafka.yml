@@ -1,0 +1,33 @@
+---
+- name: Check JDK
+  command: rpm -q java-1.8.0-openjdk
+  register: jdk_result
+
+- name: Install JDK
+  shell: yum install -y  java-1.8.0-openjdk
+  when: jdk_result.stdout.find('is not installed') == 1
+
+  
+- name: Check if scala is installed
+  command: rpm -q scala
+  register: scala_check
+
+- name: Copy Scala
+  copy: src=/root/scala-2.12.10.rpm dest=/root/scala-2.12.10.rpm owner={{ user }} mode=755
+  when: scala_check.stdout.find('is not installed') == 1
+
+- name: Install Scala
+  command: rpm -i /root/scala-2.12.10.rpm
+  when: scala_check.stdout.find('is not installed') == 1
+
+- name: Create Data Dir
+  file: path={{item}} state=directory owner={{ user }} group={{ group}} mode="u=rwx,g=r,o=r"
+  with_items:
+    - "{{ install_dir }}/{{ data_dir }}"
+    - "{{ kafka_log_path }}"
+
+- name: Copy Package
+  copy: src={{ download_path }}/kafka_{{kafka_version}}.tgz dest={{ tmp_path }} owner={{ user }} mode=755
+
+- name: Extract kafka archive
+  command: chdir={{install_dir}}/ /bin/tar xvf {{ tmp_path }}/kafka_{{kafka_version}}.tgz -C {{install_dir}}/

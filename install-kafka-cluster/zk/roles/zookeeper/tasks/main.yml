@@ -1,0 +1,20 @@
+---
+
+- name: Install Zookeeper
+  include: install_zk.yml
+  when: install_zk
+
+- name: Config Zookeeper
+  include: config_zk.yml
+  when: config_zk
+
+- include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Start Zookeeper
+  shell: "source /etc/profile.d/zookeeper_env.sh && cd {{install_dir}}/zookeeper-{{zookeeper_version}} && ./bin/zkServer.sh start"
+  become: yes
+  become_user: "{{ user }}"
+  when: start_service
+
+

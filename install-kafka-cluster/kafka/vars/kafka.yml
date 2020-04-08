@@ -1,0 +1,33 @@
+---
+# kafka version
+kafka_version: 2.12-2.3.0
+
+# kafka user
+user: "kafka"
+group: "kafka"
+
+# kafka data path
+data_dir: kafka_storage
+kafka_log_path: "{{install_dir}}/kafka_log"
+
+# kafka port
+kafka_port: 9092
+
+firewall_ports:
+  - "{{ leader_port }}"
+  - "{{ vote_port }}"
+  - "{{ client_port }}"
+  - "{{ jmx_port }}"
+  - "{{ random_port }}"
+
+# env path
+install_dir: "/data/{{ user }}"
+download_path: "/root/"               # your local download path
+tmp_path: "/tmp"
+
+# host group
+kafka_hosts: kafka   # the group define in hosts/host
+
+kafka_log4j_rootlogger: ERROR  
+
+zk_hosts: zookeeper

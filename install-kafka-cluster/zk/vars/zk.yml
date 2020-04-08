@@ -1,0 +1,33 @@
+---
+# zookeeper version
+zookeeper_version: 3.4.10
+
+# zookeeper user
+user: "zookeeper"
+group: "zookeeper"
+
+# zookeeper data path
+data_dir: zookeeper_storage
+zookeeper_log_path: "{{install_dir}}/zookeeper_log"
+
+# zookeeper port
+leader_port: 2888
+vote_port: 3888
+client_port: 2181
+jmx_port: 11911
+random_port: "30001-65006"
+
+firewall_ports:
+  - "{{ leader_port }}"
+  - "{{ vote_port }}"
+  - "{{ client_port }}"
+  - "{{ jmx_port }}"
+  - "{{ random_port }}"
+
+# env path
+install_dir: "/data/{{ user }}"
+download_path: "/root/"               # your local download path
+tmp_path: "/tmp"
+
+# host group
+zk_hosts: zookeeper                                   # the group define in hosts/host

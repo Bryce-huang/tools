@@ -1,0 +1,18 @@
+---
+- name: Check JDK
+  stat: path=/usr/local/jdk
+  register: jdk_result
+- name: Install JDK
+  shell: yum install -y  java-1.8.0-openjdk
+  when: jdk_result.stat.exists == false
+- name: Create Data Dir
+  file:  path={{item}} state=directory owner={{ user }} group={{ group}} mode="u=rwx,g=r,o=r"
+  with_items:
+    - "{{ install_dir }}/{{ data_dir }}"
+    - "{{ zookeeper_log_path }}"
+
+- name: Copy Package
+  copy: src={{ download_path }}/zookeeper-{{zookeeper_version}}.tar.gz dest={{ tmp_path }} owner={{ user }} mode=755
+
+- name: Extract zookeeper archive
+  command: chdir={{install_dir}}/ /bin/tar xvf {{ tmp_path }}/zookeeper-{{zookeeper_version}}.tar.gz -C {{install_dir}}/ 

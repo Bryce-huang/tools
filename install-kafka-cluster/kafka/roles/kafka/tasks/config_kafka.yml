@@ -1,0 +1,26 @@
+---
+
+- name: Copy log4j
+  template: src=log4j.properties dest={{install_dir}}/kafka_{{kafka_version}}/conf mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy server.properties Shell
+  template: src=server.properties dest={{install_dir}}/kafka_{{kafka_version}}/config mode=755 owner={{ user }} group = {{ group }}
+
+- name: Copy setId Shell
+  template: src=setId.sh dest={{install_dir}}/kafka_{{kafka_version}}/bin mode=755 owner={{ user }} group = {{ group }}
+
+- name: Guaranteed permissions
+  shell: 'chmod 777 -R /data'
+
+- name: set Id
+  shell: 'source {{install_dir}}/kafka_{{kafka_version}}/bin/setId.sh'
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Copy kafka
+  template: src=kafka dest=/etc/init.d mode=755 owner={{ user }} group = {{ group }}
+
+- name: Service Auto Setup
+  shell:  yum install -y java-1.8.0-openjdk-devel && service kafka status && chkconfig --add /etc/init.d/kafka && chkconfig --list && chkconfig kafka on
+  become: yes
+  become_user: "{{ user }}"

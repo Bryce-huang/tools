@@ -1,0 +1,36 @@
+---
+- name: Copy zoo.cfg
+  template: src=zoo.cfg dest={{install_dir}}/zookeeper-{{zookeeper_version}}/conf mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy log4j
+  template: src=log4j.properties dest={{install_dir}}/zookeeper-{{zookeeper_version}}/conf mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy zkEnv Shell
+  template: src=zkEnv.sh dest={{install_dir}}/zookeeper-{{zookeeper_version}}/bin mode=755 owner={{ user }} group = {{ group }}
+
+- name: Copy zkServer Shell
+  template: src=zkServer.sh dest={{install_dir}}/zookeeper-{{zookeeper_version}}/bin mode=755 owner={{ user }} group = {{ group }}
+
+- name: Copy setId Shell
+  template: src=setId.sh dest={{install_dir}}/zookeeper-{{zookeeper_version}}/bin mode=755 owner={{ user }} group = {{ group }}
+
+- name: set Id
+  shell: 'source {{install_dir}}/zookeeper-{{zookeeper_version}}/bin/setId.sh'
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Copy Zookeeper Env Script
+  template: src=zookeeper_env.sh dest=/etc/profile.d/ mode=755
+
+- name: Set Zookeeper Env
+  shell: source /etc/profile.d/zookeeper_env.sh
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Copy Zookeeper
+  template: src=zookeeper dest=/etc/init.d mode=755 owner={{ user }} group = {{ group }}
+
+- name: Service Auto Setup
+  shell:  yum install -y java-1.8.0-openjdk-devel && service zookeeper status && chkconfig --add /etc/init.d/zookeeper && chkconfig --list && chkconfig zookeeper on
+  become: yes
+  become_user: "{{ user }}"
