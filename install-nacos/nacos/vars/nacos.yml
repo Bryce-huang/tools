@@ -1,0 +1,48 @@
+---
+# nacos version
+nacos_version: 1.2.0
+
+# nacos user
+user: "nacos"
+group: "nacos"
+
+# nacos service address
+
+nacos_address:
+  - 192.168.1.1:8848
+  - 192.168.1.2:8848
+  - 192.168.1.3:8848
+
+
+# mysql address
+
+mysql:
+  address: 192.168.0.103:3306
+  user: xxx
+  password: xxx
+
+# nacos data path
+data_dir: nacos_storage
+nacos_log_path: "{{install_dir}}/nacos_access_log"
+
+# nacos port
+nacos_port: 8848
+
+firewall_ports:
+  - "{{ leader_port }}"
+  - "{{ vote_port }}"
+  - "{{ client_port }}"
+  - "{{ jmx_port }}"
+  - "{{ random_port }}"
+
+# env path
+install_dir: "/data/{{ user }}"
+download_path: "/root/"               # your local download path
+tmp_path: "/tmp"
+
+# host group
+
+kafka_log4j_rootlogger: ERROR  
+
+nacos_hosts: nacos
+

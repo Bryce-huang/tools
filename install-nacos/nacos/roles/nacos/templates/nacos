@@ -1,0 +1,21 @@
+#!/bin/bash
+# chkconfig:   2345 10 90
+# description:  nacos
+case $1 in
+          start) 
+              {{install_dir}}/nacos/bin/startup.sh
+              ;;
+          stop)
+               {{install_dir}}/nacos/bin/shutdown.sh
+              ;;
+          status)
+              jps
+              ;;
+          restart)
+              {{install_dir}}/nacos/bin/shutdown.sh
+              {{install_dir}}/nacos/bin/startup.sh
+              ;;
+          *)
+              echo "require start|stop|status|restart"
+              ;;
+esac

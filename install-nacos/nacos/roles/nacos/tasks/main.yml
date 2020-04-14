@@ -1,0 +1,21 @@
+---
+
+- name: Install Nacos
+  include: install_nacos.yml
+  when: install_nacos
+
+- name: Config Nacos
+  include: config_nacos.yml
+  when: config_nacos
+
+- include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+
+- name: Start Nacos
+  shell: " cd {{install_dir}}/nacos && sh bin/startup.sh "
+  become: yes
+  become_user: "{{ user }}"
+  when: start_service
+
+

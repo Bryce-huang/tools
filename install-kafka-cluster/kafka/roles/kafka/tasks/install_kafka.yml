@@ -1,11 +1,10 @@
 ---
-- name: Check JDK
-  command: rpm -q java-1.8.0-openjdk
-  register: jdk_result
+- name: Install  JDK
+  yum: name=java-1.8.0-openjdk  state=present
 
-- name: Install JDK
-  shell: yum install -y  java-1.8.0-openjdk
-  when: jdk_result.stdout.find('is not installed') == 1
+#- name: Install JDK
+#  shell: yum install -y  java-1.8.0-openjdk
+#  when: jdk_result.stdout.find('is not installed') == 1
 
   
 - name: Check if scala is installed

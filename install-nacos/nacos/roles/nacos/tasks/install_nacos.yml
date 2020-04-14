@@ -1,0 +1,17 @@
+---
+- name: Install  JDK
+  yum: name=java-1.8.0-openjdk  state=present
+
+
+
+- name: Create Data Dir
+  file: path={{item}} state=directory owner={{ user }} group={{ group}} mode="u=rwx,g=r,o=r"
+  with_items:
+    - "{{ install_dir }}/{{ data_dir }}"
+    - "{{ nacos_log_path }}"
+
+- name: Copy Package
+  copy: src={{ download_path }}/nacos-server-{{ nacos_version }}.tar.gz dest={{ tmp_path }} owner={{ user }} mode=755
+
+- name: Extract nacos archive
+  command: chdir={{install_dir}}/ /bin/tar xvf {{ tmp_path }}/nacos-server-{{ nacos_version }}.tar.gz -C {{install_dir}}/

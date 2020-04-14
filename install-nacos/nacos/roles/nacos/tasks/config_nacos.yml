@@ -1,0 +1,26 @@
+---
+
+- name: Copy cluster.conf
+  template: src=cluster.conf dest={{install_dir}}/nacos/conf mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy startup.sh
+  template: src=startup.sh dest={{install_dir}}/nacos/bin mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy application.properties
+  template: src=application.properties dest={{install_dir}}/nacos/conf mode=755 owner={{ user }} group = {{ group }}
+
+
+- name: Copy nacos template
+  template: src=nacos dest=/etc/init.d mode=755 owner={{ user }} group = {{ group }}
+
+
+
+- name: install openjdk-devel
+  yum: name=java-1.8.0-openjdk-devel  state=present
+
+- name: Service Auto Setup
+  shell:   service nacos status && chkconfig --add /etc/init.d/nacos && chkconfig --list && chkconfig nacos on
+  become: yes
+
+- name: Guaranteed permissions
+  shell: 'chmod 777 -R /data'

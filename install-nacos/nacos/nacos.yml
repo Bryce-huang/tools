@@ -1,0 +1,14 @@
+---
+- hosts: nacos
+  user: root
+  vars_files:
+    - "vars/nacos.yml"
+  vars:
+    install_nacos: true      # install nacos
+    config_nacos: true       # config nacos
+    start_service: true   # auto start nacos service
+    add_user: true        # add nacos user
+    open_firewall: false   # open firewall
+  roles:
+    - user                # add user
+    - nacos           # nacos
