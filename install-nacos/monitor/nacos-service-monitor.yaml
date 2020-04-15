@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: nacos-metrics
+    prometheus: ipaas
+  name: nacos-metrics
+
+spec:
+  endpoints:
+    - interval: 30s
+      port: nacos-metrics
+      scheme: http
+      path: /nacos/actuator/prometheus
+  jobLabel: nacos-metrics
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector: {}

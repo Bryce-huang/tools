@@ -1,0 +1,23 @@
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: ipaas
+    role: alert-rules
+  name: kafka-rule
+
+spec:
+  groups:
+    - name: kafka-down
+      rules:
+        - alert: kafka 服务不可用
+          annotations:
+            description: kafka节点消失
+            summary: 'Instance {{ $labels.instance }} '
+          expr: count(kafka_brokers{endpoint="kafka-exporter"}) == 0
+          for: 1m
+          labels:
+            severity: critical
+
+
