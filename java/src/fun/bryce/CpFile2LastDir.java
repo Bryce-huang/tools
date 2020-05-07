@@ -2,7 +2,6 @@ package fun.bryce;
 
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +13,8 @@ import java.util.Objects;
 public class CpFile2LastDir
 {
     static List<String> dirs = new ArrayList<>(50);
-    static String ROOT = "C:\\Users\\cherb\\Desktop\\tet";
-    static String FILE = "C:\\Users\\cherb\\Desktop\\tet\\xx.txt";
+    static String ROOT = "C:\\Users\\cherb\\Desktop\\dir";
+    static String FILE = "C:\\Users\\cherb\\Desktop\\dockerfile";
 
     public static void main(String[] args) throws IOException
     {
@@ -26,21 +25,26 @@ public class CpFile2LastDir
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
             {
                 File file = dir.toFile();
-                dirs.add(file.getAbsolutePath());
+                File[] files = file.listFiles();
+                if (files == null || files.length == 0)
+                {
+                    dirs.add(file.getAbsolutePath());
+                }
+
                 return super.postVisitDirectory(dir, exc);
             }
 
         });
-        List<String> repeats = new ArrayList<>(dirs.size() / 2);
-        for (int i = 1; i < dirs.size(); i++)
-        {
-            if (dirs.get(i - 1)
-                    .contains(dirs.get(i)))
-            {
-                repeats.add(dirs.get(i));
-            }
-        }
-        dirs.removeAll(repeats);
+//        List<String> repeats = new ArrayList<>(dirs.size() / 2);
+//        for (int i = 1; i < dirs.size(); i++)
+//        {
+//            if (dirs.get(i - 1)
+//                    .contains(dirs.get(i)))
+//            {
+//                repeats.add(dirs.get(i));
+//            }
+//        }
+//        dirs.removeAll(repeats);
         File file = new File(FILE);
         for (String dir : dirs)
         {
