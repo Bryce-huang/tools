@@ -1,0 +1,48 @@
+---
+# elasticsearch version
+elasticsearch_version: 7.5.1
+
+# elasticsearch user
+user: "elastic"
+group: "elastic"
+
+
+
+jvm_heap_size: 8
+
+# elasticsearch data path
+data_dir: elasticsearch_storage
+elasticsearch_log_path: "{{install_dir}}/elasticsearch_log"
+
+# elasticsearch port
+elasticsearch_port: 9201
+
+firewall_ports:
+  - "{{ leader_port }}"
+  - "{{ vote_port }}"
+  - "{{ client_port }}"
+  - "{{ jmx_port }}"
+  - "{{ random_port }}"
+
+# env path
+install_dir: "/data/{{ user }}"
+download_path: "/root/"               # your local download path
+tmp_path: "/tmp"
+
+# host group
+
+kafka_log4j_rootlogger: ERROR  
+
+elasticsearch_hosts: elasticsearch
+
+es_download_home: "{{download_path}}elasticsearch-{{ elasticsearch_version }}"
+
+es_home: "{{install_dir}}/elasticsearch-{{ elasticsearch_version }}"
+
+es_tmp_user: cherbini
+
+es_tmp_pass: cherbini123
+
+elastic_pass: vLoNRzBKOB#Jq@l9
+
+loadbalance: 10.8.122.3

@@ -1,0 +1,24 @@
+---
+
+- name: Install elasticsearch
+  include: install_elasticsearch.yml
+  when: install_elasticsearch
+
+- name: Config elasticsearch
+  include: config_elasticsearch.yml
+  when: config_elasticsearch
+
+- include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+
+- name: Start elasticsearch
+  shell: "systemctl start  elasticsearch"
+  when: start_service
+
+- name: create super user for elasticsearch
+  shell: "{{es_home}}/bin/elasticsearch-users useradd cherbini -p cherbini123 -r superuser"
+  become: yes
+  become_user: "{{ user }}"
+
+

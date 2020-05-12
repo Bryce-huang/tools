@@ -1,0 +1,26 @@
+---
+- name: Install  JDK
+  yum: name=java-1.8.0-openjdk  state=present
+
+
+- name: Create Data Dir
+  file: path={{item}} state=directory owner={{ user }} group={{ group}} mode="u=rwx,g=r,o=r"
+  with_items:
+    - "{{ install_dir }}/{{ data_dir }}"
+    - "{{ elasticsearch_log_path }}"
+
+- name: Copy Package
+  copy: src={{ download_path }}/elasticsearch-{{ elasticsearch_version }}-linux-x86_64.tar.gz dest={{ tmp_path }} owner={{ user }} mode=755
+
+- name: Extract elasticsearch archive
+  command: chdir={{install_dir}}/ /bin/tar xvf {{ tmp_path }}/elasticsearch-{{ elasticsearch_version }}-linux-x86_64.tar.gz -C {{install_dir}}/
+
+
+- name: cp ik plugin
+  copy: src={{ download_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip dest={{ tmp_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip
+
+- name: install ik plugin
+  shell: 'echo -e "y"  {{es_home}}/bin/elasticsearch-plugin install  {{ tmp_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip'
+
+
+  

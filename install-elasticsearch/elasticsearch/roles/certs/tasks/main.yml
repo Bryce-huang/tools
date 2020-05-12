@@ -1,0 +1,11 @@
+---
+- name: Extract elasticsearch archive
+  unarchive:
+    src: '{{download_path}}elasticsearch-{{ elasticsearch_version }}-linux-x86_64.tar.gz'
+    dest: /root
+
+- name: create CA
+  shell: 'echo -e "\n"| {{es_download_home}}/bin/elasticsearch-certutil ca --out  {{es_download_home}}/elastic-stack-ca.p12'
+
+- name: create certs for node
+  shell: ' echo  "" | {{es_download_home}}/bin/elasticsearch-certutil cert --ca {{es_download_home}}/elastic-stack-ca.p12 --ca-pass "" -out {{es_download_home}}/elastic-certificates.p12'

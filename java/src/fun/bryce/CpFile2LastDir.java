@@ -26,15 +26,16 @@ public class CpFile2LastDir
             {
                 File file = dir.toFile();
                 File[] files = file.listFiles();
+                // 简易做法，最后一个没有文件的目录会被收录
                 if (files == null || files.length == 0)
                 {
                     dirs.add(file.getAbsolutePath());
                 }
-
                 return super.postVisitDirectory(dir, exc);
             }
 
         });
+        // 传统做法，保证最后一个目录都可以被访问
 //        List<String> repeats = new ArrayList<>(dirs.size() / 2);
 //        for (int i = 1; i < dirs.size(); i++)
 //        {

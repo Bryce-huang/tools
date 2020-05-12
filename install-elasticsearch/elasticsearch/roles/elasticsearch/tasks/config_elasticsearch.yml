@@ -1,0 +1,40 @@
+---
+- name: create certs dir
+  file:
+    path: '{{es_home}}/config/certs'
+    state: directory
+    owner: '{{user}}'
+    group: '{{group}}'
+    mode: 0775
+    recurse: yes
+
+- name: copy certs to node
+  copy: src={{es_download_home}}/elastic-certificates.p12 dest={{es_home}}/config/certs/elastic-certificates.p12
+
+- name: Copy elasticsearch.yml
+  template: src=elasticsearch.yml dest={{es_home}}/config mode=644 owner={{ user }} group = {{ group }}
+
+- name: Copy jvm.options
+  template: src=jvm.options dest={{es_home}}/config mode=644 owner={{ user }} group = {{ group }}
+
+
+- name: Copy elasticsearch template
+  template: src=elasticsearch dest=/etc/init.d/elasticsearch mode=755 owner={{ user }} group = {{ group }}
+
+
+- name: install openjdk-devel
+  yum: name=java-1.8.0-openjdk-devel  state=present
+
+- name: Guaranteed permissions
+  file: 'path=/data/{{user}}  owner={{user}} group={{ group }} mode=0755 recurse=yes'
+
+- name: Service Auto Setup
+  shell:  service elasticsearch status && chkconfig --add /etc/init.d/elasticsearch && chkconfig --list && chkconfig elasticsearch on
+  become: yes
+  
+
+
+- name: set max virtual memory
+  shell: echo 'vm.max_map_count=655360' >> /etc/sysctl.conf && sysctl -p
+
+

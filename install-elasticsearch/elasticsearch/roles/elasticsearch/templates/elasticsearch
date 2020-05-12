@@ -1,0 +1,39 @@
+#!/bin/sh
+#chkconfig: 2345 80 05
+#description: elasticsearch
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64
+export JAVA_BIN=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64/bin
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export JAVA_HOME JAVA_BIN PATH CLASSPATH
+
+case "$1" in
+start)
+    su {{user}}<<!
+    cd {{es_home}}
+    ./bin/elasticsearch -d
+!
+    echo "elasticsearch startup"
+    ;;
+stop)
+    es_pid=`ps aux|grep elasticsearch | grep -v 'grep elasticsearch' | awk '{print $2}'`
+    kill -9 $es_pid
+    echo "elasticsearch stopped"
+    ;;
+restart)
+    es_pid=`ps aux|grep elasticsearch | grep -v 'grep elasticsearch' | awk '{print $2}'`
+    kill -9 $es_pid
+    echo "elasticsearch stopped"
+    su {{user}}<<!
+    cd {{es_home}}
+    ./bin/elasticsearch -d
+!
+    echo "elasticsearch startup"
+    ;;
+*)
+    echo "start|stop|restart"
+    ;;
+esac
+
+exit $?

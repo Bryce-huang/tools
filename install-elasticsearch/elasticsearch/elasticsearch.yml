@@ -1,0 +1,27 @@
+---
+
+- hosts: localhost
+  user: root
+  vars_files:
+    - "vars/elasticsearch.yml"
+  roles:
+    - certs
+- hosts: elasticsearch
+  user: root
+  vars_files:
+    - "vars/elasticsearch.yml"
+  vars:
+    install_elasticsearch: true      # install elasticsearch
+    config_elasticsearch: true       # config elasticsearch
+    start_service: true   # auto start elasticsearch service
+    add_user: true        # add elasticsearch user
+    open_firewall: false   # open firewall
+  roles:
+    - user                # add user
+    - elasticsearch           # elasticsearch
+- hosts: localhost
+  user: root
+  vars_files:
+    - "vars/elasticsearch.yml"
+  roles:
+    - after_install

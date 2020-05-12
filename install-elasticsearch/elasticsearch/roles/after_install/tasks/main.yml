@@ -1,0 +1,33 @@
+---
+- name: correct elastic passwd
+  #shell: curl -u {{es_tmp_user}}:{{es_tmp_pass}} -XPUT "http://{{loadbalance}}:{{elasticsearch_port}}/_xpack/security/user/elastic/_password?pretty" -H 'Content-Type: application/json' -d '{"password":"{{elastic_pass}}"}'
+  uri:
+    url: "http://{{loadbalance}}:{{elasticsearch_port}}/_xpack/security/user/elastic/_password?pretty"
+    method: PUT
+    user: "{{es_tmp_user}}"
+    password: "{{es_tmp_pass}}"
+    force_basic_auth: yes
+    body_format: json
+    body: 
+      passsword: "{{elastic_pass}}"
+    headers: 
+      Content-Type: application/json
+
+    
+- name: Check if the password is correct
+  uri:
+    url: "http://{{loadbalance}}:{{elasticsearch_port}}"
+    method: GET
+    user: "elastic"
+    password: "{{elastic_pass}}"
+    force_basic_auth: yes
+    status_code: 200
+  register: result
+  failed_when: result.status != 200
+
+- name: del temp super user
+  shell: 'ansible {{elasticsearch_hosts}} -m shell -a "{{es_home}}/bin/elasticsearch-users userdel {{es_tmp_user}}" '
+
+
+
+    
