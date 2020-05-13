@@ -1,15 +1,14 @@
 ---
 - name: correct elastic passwd
-  #shell: curl -u {{es_tmp_user}}:{{es_tmp_pass}} -XPUT "http://{{loadbalance}}:{{elasticsearch_port}}/_xpack/security/user/elastic/_password?pretty" -H 'Content-Type: application/json' -d '{"password":"{{elastic_pass}}"}'
   uri:
-    url: "http://{{loadbalance}}:{{elasticsearch_port}}/_xpack/security/user/elastic/_password?pretty"
-    method: PUT
+    url: "http://{{loadbalance}}:{{elasticsearch_port}}/_security/user/elastic/_password"
+    method: POST
     user: "{{es_tmp_user}}"
     password: "{{es_tmp_pass}}"
     force_basic_auth: yes
     body_format: json
-    body: 
-      passsword: "{{elastic_pass}}"
+    body: {"password": "{{elastic_pass}}"}
+      
     headers: 
       Content-Type: application/json
 

@@ -43,6 +43,6 @@ es_tmp_user: cherbini
 
 es_tmp_pass: cherbini123
 
-elastic_pass: vLoNRzBKOB#Jq@l9
+elastic_pass: vLo9
 
-loadbalance: 10.8.122.3
+loadbalance: 192.168.0.1

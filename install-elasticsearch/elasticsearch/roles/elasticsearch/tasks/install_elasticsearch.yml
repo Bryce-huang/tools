@@ -20,7 +20,6 @@
   copy: src={{ download_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip dest={{ tmp_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip
 
 - name: install ik plugin
-  shell: 'echo -e "y"  {{es_home}}/bin/elasticsearch-plugin install  {{ tmp_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip'
-
+  shell: 'echo -e "y" | {{es_home}}/bin/elasticsearch-plugin install file://{{ tmp_path }}/elasticsearch-analysis-ik-{{ elasticsearch_version }}.zip'
 
   
