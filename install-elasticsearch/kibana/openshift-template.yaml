@@ -1,0 +1,130 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+ 
+  name: kibana-template
+objects:
+  - apiVersion: v1
+    data:
+      es-pass: dkxvTlJ6QktPQiNKcUBsOQ==
+      es-user: ZWxhc3RpYw==
+    kind: Secret
+    metadata:
+      name: es
+    type: Opaque
+  
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      creationTimestamp: '2020-05-13T02:06:59Z'
+      labels:
+        app: kibana
+      name: kibana
+    spec:
+      externalTrafficPolicy: Cluster
+      ports:
+        - name: 5601-tcp
+          port: 5601
+          protocol: TCP
+          targetPort: 5601
+      selector:
+        deploymentconfig: kibana
+      sessionAffinity: None
+      type: NodePort
+   
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+    
+      labels:
+        app: kibana
+      name: kibana
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 3
+      selector:
+        app: kibana
+        deploymentconfig: kibana
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: kibana
+            deploymentconfig: kibana
+        spec:
+          containers:
+            - env:
+                - name: ELASTICSEARCH_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: es-user
+                      name: es
+                - name: ELASTICSEARCH_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: es-pass
+                      name: es
+                - name: ELASTICSEARCH_URL
+                  value: 'http://192.168.0.1:9201'
+                - name: TZ
+                  value: Asia/Shanghai
+              image: 'docker.elastic.co/kibana/kibana:7.5.1'
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                tcpSocket:
+                  port: 5601
+                timeoutSeconds: 1
+              name: kibana
+              ports:
+                - containerPort: 5601
+                  protocol: TCP
+              readinessProbe:
+                failureThreshold: 3
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                tcpSocket:
+                  port: 5601
+                timeoutSeconds: 1
+              resources:
+                limits:
+                  cpu: '1'
+                  memory: 1500Mi
+                requests:
+                  cpu: 500m
+                  memory: 800Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /usr/share/kibana/config/
+                  name: kibana-m6k7w
+                  readOnly: true
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - configMap:
+                defaultMode: 420
+                name: kibana
+              name: kibana-m6k7w
+      test: false
+      triggers:
+        - type: ConfigChange
+  
+  
