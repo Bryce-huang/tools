@@ -1,18 +1,20 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
+ 
   labels:
-    app: nacos-metrics
+    app: elastic-exporter
     prometheus: ipaas
-  name: nacos-metrics
-
+  name: elastic-exporter
+  namespace: monitoring
+  
 spec:
   endpoints:
     - interval: 30s
-      port: nacos-metrics
+      path: /metrics
+      port: tcp-9114
       scheme: http
-      path: /nacos/actuator/prometheus
-  jobLabel: nacos-metrics
+  jobLabel: elastic-exporter
   namespaceSelector:
     matchNames:
       - monitoring

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: '9114'
+    prometheus.io/scrape: 'true'
+  name: elastic-exporter
+  namespace: monitoring
+spec:
+  ports:
+    - name: tcp-9114
+      port: 9114
+      protocol: TCP
+      targetPort: 9114
+  selector:
+    app: elastic-exporter
+  sessionAffinity: None
+  type: ClusterIP
+
