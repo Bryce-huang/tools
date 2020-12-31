@@ -13,5 +13,3 @@ do
     /d/dailyTools/7-Zip/7z.exe x ${filename%.*}.zip -o${filename%.*}
     mv ${filename%.*}/${filename%.*} $filename
 done
-
-e
